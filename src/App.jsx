@@ -1,6 +1,65 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import "./App.css";
 import * as spoonService from "./services/spoonacularService";
+import RecipeCard from "./components/RecipeCard";
+
+const CUISINES = [
+  "African",
+  "American",
+  "British",
+  "Cajun",
+  "Caribbean",
+  "Chinese",
+  "Eastern European",
+  "European",
+  "French",
+  "German",
+  "Greek",
+  "Indian",
+  "Irish",
+  "Italian",
+  "Japanese",
+  "Jewish",
+  "Korean",
+  "Latin American",
+  "Mediterranean",
+  "Mexican",
+  "Middle Eastern",
+  "Nordic",
+  "Southern",
+  "Spanish",
+  "Thai",
+  "Vietnamese",
+];
+const DISH_TYPES = [
+  "main course",
+  "side dish",
+  "dessert",
+  "appetizer",
+  "salad",
+  "bread",
+  "breakfast",
+  "soup",
+  "beverage",
+  "sauce",
+  "marinade",
+  "fingerfood",
+  "snack",
+  "drink",
+];
+const DIETS = [
+  "gluten free",
+  "ketogenic",
+  "vegetarian",
+  "lacto-vegetarian",
+  "ovo-vegetarian",
+  "vegan",
+  "pescetarian",
+  "paleo",
+  "primal",
+  "low FODMAP",
+  "whole30",
+];
 
 const App = () => {
   const [recipes, setRecipes] = useState([]);
@@ -10,9 +69,9 @@ const App = () => {
   const [filters, setFilters] = useState({ cuisine: "", type: "", diet: "" });
   const [localSearch, setLocalSearch] = useState("");
 
-  // useEffect(() => {
-  //   fetchData("", {});
-  // }, []);
+  useEffect(() => {
+    fetchData("", {});
+  }, []);
 
   const fetchData = async (q, f) => {
     try {
@@ -29,6 +88,14 @@ const App = () => {
     }
   };
 
+
+
+  const displayed = useMemo(() => {
+    if (!localSearch.trim()) return recipes;
+    const lc = localSearch.toLowerCase();
+    return recipes.filter((r) => r.title.toLowerCase().includes(lc));
+  }, [recipes, localSearch]);
+
   return (
     <div>
       <header>
@@ -36,11 +103,11 @@ const App = () => {
           <p>Spoonacular · Recipe Explorer</p>
           <h1>Welcome to RecipeFinder</h1>
           <form>
-            <label htmlFor="query">Type of food:</label>
+            <label htmlFor="query-food">Type of food:</label>
             <input
               type="text"
               placeholder="pasta, tacos, curry..."
-              id="query"
+              id="query-food"
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);
@@ -53,12 +120,43 @@ const App = () => {
         </div>
       </header>
 
-      {recipes.map((recipe) => (
-        <div key={recipe.id}>
-          <h3>{recipe.title}</h3>
-          <img src={recipe.image} alt={recipe.title} width="150" />
-        </div>
-      ))}
+      <main>
+        {recipes.length > 0 && (
+          <div>
+            <input
+              type="text"
+              placeholder="Filter results by name…"
+              value={localSearch}
+              onChange={(e) => setLocalSearch(e.target.value)}
+            />
+            <span>{displayed.length} recipes</span>
+          </div>
+        )}
+
+        {error && <p>{error}</p>}
+        {loading && (
+          <div>
+            <span />
+            <p>Fetching delicious recipes…</p>
+          </div>
+        )}
+
+        {!loading && displayed.length > 0 && (
+          <div>
+            {displayed.map((r) => (
+              <RecipeCard key={r.id} recipe={r} />
+            ))}
+          </div>
+        )}
+
+        {!loading && !error && recipes.length > 0 && displayed.length === 0 && (
+          <p>No recipes match your local filter.</p>
+        )}
+
+        {!loading && !error && recipes.length === 0 && (
+          <p>No recipes found. Try a different search.</p>
+        )}
+      </main>
     </div>
   );
 };
