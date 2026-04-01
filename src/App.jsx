@@ -1,17 +1,18 @@
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import * as spoonService from "./services/spoonacularService";
-
-import React, { useEffect, useState } from "react";
 
 const App = () => {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
+  const [filters, setFilters] = useState({ cuisine: "", type: "", diet: "" });
+  const [localSearch, setLocalSearch] = useState("");
 
-  useEffect(() => {
-    fetchData("", {});
-  }, []);
+  // useEffect(() => {
+  //   fetchData("", {});
+  // }, []);
 
   const fetchData = async (q, f) => {
     try {
@@ -30,10 +31,27 @@ const App = () => {
 
   return (
     <div>
-      <h1>Welcome to RecipeFinder</h1>
-
-      {loading && <p>Loading...</p>}
-      {error && <p>{error}</p>}
+      <header>
+        <div>
+          <p>Spoonacular · Recipe Explorer</p>
+          <h1>Welcome to RecipeFinder</h1>
+          <form>
+            <label htmlFor="query">Type of food:</label>
+            <input
+              type="text"
+              placeholder="pasta, tacos, curry..."
+              id="query"
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+              }}
+            />
+            <button type="submit" disabled={loading}>
+              {loading ? "..." : "Search"}
+            </button>
+          </form>
+        </div>
+      </header>
 
       {recipes.map((recipe) => (
         <div key={recipe.id}>
