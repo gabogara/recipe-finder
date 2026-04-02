@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import "./App.css";
+
 import * as spoonService from "./services/spoonacularService";
 import RecipeCard from "./components/RecipeCard";
 import Select from "./components/Select";
@@ -52,13 +53,17 @@ const App = () => {
 
   return (
     <div>
-      <header>
-        <div>
-          <p>Spoonacular · Recipe Explorer</p>
-          <h1>Welcome to RecipeFinder</h1>
-          <form onSubmit={handleSearch}>
+      <header className="hero">
+        <div className="hero-inner">
+          <p className="hero-eyebrow">Spoonacular · Recipe Finder</p>
+          <h1 className="hero-title">
+            Find your next <br />
+            <em>favorite dish</em>
+          </h1>
+          <form className="search-form" onSubmit={handleSearch}>
             <label htmlFor="query-food">Type of food:</label>
             <input
+              className="search-input"
               type="text"
               placeholder="pasta, tacos, curry..."
               id="query-food"
@@ -67,15 +72,15 @@ const App = () => {
                 setQuery(e.target.value);
               }}
             />
-            <button type="submit" disabled={loading}>
+            <button className="search-btn" type="submit" disabled={loading}>
               {loading ? "..." : "Search"}
             </button>
           </form>
         </div>
       </header>
 
-      <main>
-        <section>
+      <main className="main">
+        <section className="filters-bar">
           <Select
             label="Cuisine"
             options={CUISINES}
@@ -96,6 +101,7 @@ const App = () => {
           />
           {(filters.cuisine || filters.type || filters.diet) && (
             <button
+              className="clear-btn"
               type="button"
               onClick={() => {
                 const empty = { cuisine: "", type: "", diet: "" };
@@ -108,38 +114,39 @@ const App = () => {
           )}
         </section>
 
-        <Stat recipes={displayed}/>
+        <Stat recipes={displayed} />
 
         {recipes.length > 0 && (
-          <div>
+          <div className="local-search-wrap">
             <input
+              className="local-search"
               type="text"
               placeholder="Filter results by name…"
               value={localSearch}
               onChange={(e) => setLocalSearch(e.target.value)}
             />
-            <span>{displayed.length} recipes</span>
+            <span className="result-count">{displayed.length} recipes</span>
           </div>
         )}
-        {error && <p>{error}</p>}
+        {error && <p className="error-msg">{error}</p>}
         {loading && (
-          <div>
-            <span />
+          <div className="loader-wrap">
+            <span className="loader" />
             <p>Fetching delicious recipes…</p>
           </div>
         )}
         {!loading && displayed.length > 0 && (
-          <div>
+          <div className="recipe-grid">
             {displayed.map((r) => (
               <RecipeCard key={r.id} recipe={r} />
             ))}
           </div>
         )}
         {!loading && !error && recipes.length > 0 && displayed.length === 0 && (
-          <p>No recipes match your local filter.</p>
+          <p className="empty-msg">No recipes match your local filter.</p>
         )}
         {!loading && !error && recipes.length === 0 && (
-          <p>No recipes found. Try a different search.</p>
+          <p className="empty-msg">No recipes found. Try a different search.</p>
         )}
       </main>
     </div>
