@@ -2,64 +2,8 @@ import React, { useEffect, useState, useMemo } from "react";
 import "./App.css";
 import * as spoonService from "./services/spoonacularService";
 import RecipeCard from "./components/RecipeCard";
-
-const CUISINES = [
-  "African",
-  "American",
-  "British",
-  "Cajun",
-  "Caribbean",
-  "Chinese",
-  "Eastern European",
-  "European",
-  "French",
-  "German",
-  "Greek",
-  "Indian",
-  "Irish",
-  "Italian",
-  "Japanese",
-  "Jewish",
-  "Korean",
-  "Latin American",
-  "Mediterranean",
-  "Mexican",
-  "Middle Eastern",
-  "Nordic",
-  "Southern",
-  "Spanish",
-  "Thai",
-  "Vietnamese",
-];
-const DISH_TYPES = [
-  "main course",
-  "side dish",
-  "dessert",
-  "appetizer",
-  "salad",
-  "bread",
-  "breakfast",
-  "soup",
-  "beverage",
-  "sauce",
-  "marinade",
-  "fingerfood",
-  "snack",
-  "drink",
-];
-const DIETS = [
-  "gluten free",
-  "ketogenic",
-  "vegetarian",
-  "lacto-vegetarian",
-  "ovo-vegetarian",
-  "vegan",
-  "pescetarian",
-  "paleo",
-  "primal",
-  "low FODMAP",
-  "whole30",
-];
+import Select from "./components/Select";
+import { CUISINES, DISH_TYPES, DIETS } from "./data/data";
 
 const App = () => {
   const [recipes, setRecipes] = useState([]);
@@ -70,7 +14,7 @@ const App = () => {
   const [localSearch, setLocalSearch] = useState("");
 
   useEffect(() => {
-    fetchData("", {});
+    fetchData("", { cuisine: "", type: "", diet: "" });
   }, []);
 
   const fetchData = async (q, f) => {
@@ -88,7 +32,16 @@ const App = () => {
     }
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    fetchData(query, filters);
+  };
 
+  const handleFilterChange = (key, value) => {
+    const next = { ...filters, [key]: value };
+    setFilters(next);
+    fetchData(query, next);
+  };
 
   const displayed = useMemo(() => {
     if (!localSearch.trim()) return recipes;
@@ -102,7 +55,7 @@ const App = () => {
         <div>
           <p>Spoonacular · Recipe Explorer</p>
           <h1>Welcome to RecipeFinder</h1>
-          <form>
+          <form onSubmit={handleSearch}>
             <label htmlFor="query-food">Type of food:</label>
             <input
               type="text"
@@ -121,6 +74,39 @@ const App = () => {
       </header>
 
       <main>
+        <section>
+          <Select
+            label="Cuisine"
+            options={CUISINES}
+            value={filters.cuisine}
+            onChange={(v) => handleFilterChange("cuisine", v)}
+          />
+          <Select
+            label="Dish type"
+            options={DISH_TYPES}
+            value={filters.type}
+            onChange={(v) => handleFilterChange("type", v)}
+          />
+          <Select
+            label="Diet"
+            options={DIETS}
+            value={filters.diet}
+            onChange={(v) => handleFilterChange("diet", v)}
+          />
+          {(filters.cuisine || filters.type || filters.diet) && (
+            <button
+              type="button"
+              onClick={() => {
+                const empty = { cuisine: "", type: "", diet: "" };
+                setFilters(empty);
+                fetchData(query, empty);
+              }}
+            >
+              ✕ Clear filters
+            </button>
+          )}
+        </section>
+
         {recipes.length > 0 && (
           <div>
             <input
@@ -132,7 +118,6 @@ const App = () => {
             <span>{displayed.length} recipes</span>
           </div>
         )}
-
         {error && <p>{error}</p>}
         {loading && (
           <div>
@@ -140,7 +125,6 @@ const App = () => {
             <p>Fetching delicious recipes…</p>
           </div>
         )}
-
         {!loading && displayed.length > 0 && (
           <div>
             {displayed.map((r) => (
@@ -148,11 +132,9 @@ const App = () => {
             ))}
           </div>
         )}
-
         {!loading && !error && recipes.length > 0 && displayed.length === 0 && (
           <p>No recipes match your local filter.</p>
         )}
-
         {!loading && !error && recipes.length === 0 && (
           <p>No recipes found. Try a different search.</p>
         )}
