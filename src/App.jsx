@@ -4,6 +4,7 @@ import * as spoonService from "./services/spoonacularService";
 import RecipeCard from "./components/RecipeCard";
 import Select from "./components/Select";
 import { CUISINES, DISH_TYPES, DIETS } from "./data/data";
+import Stat from "./components/Stat";
 
 const App = () => {
   const [recipes, setRecipes] = useState([]);
@@ -106,6 +107,8 @@ const App = () => {
             </button>
           )}
         </section>
+
+        <Stat recipes={displayed}/>
 
         {recipes.length > 0 && (
           <div>
