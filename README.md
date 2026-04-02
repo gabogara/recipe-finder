@@ -1,16 +1,78 @@
-# React + Vite
+# Web Development Project 5 - *RecipeFinder*
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Submitted by: **Gabriel Restrepo**
 
-Currently, two official plugins are available:
+This web app: **RecipeFinder is a dynamic dashboard that allows users to search, filter, and explore recipes using the Spoonacular API. Users can browse recipes, apply multiple filters, view key statistics, and interact with recipe cards that flip to reveal more details.**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Time spent: **20** hours spent in total
 
-## React Compiler
+## Required Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The following **required** functionality is completed:
 
-## Expanding the ESLint configuration
+- [x] **The site has a dashboard displaying a list of data fetched using an API call**
+  - The dashboard should display at least 10 unique items, one per row
+  - The dashboard includes at least two features in each row
+- [x] **`useEffect` React hook and `async`/`await` are used**
+- [x] **The app dashboard includes at least three summary statistics about the data** 
+  - The app dashboard includes at least three summary statistics about the data, such as:
+  - Total number of recipes loaded
+  - Average cooking time
+  - Number of vegetarian recipes
+  - Top cuisine category
+  - Average health score
+- [x] **A search bar allows the user to search for an item in the fetched data**
+  - Filters recipes by title
+  - Updates dynamically as the user types
+- [x] **An additional filter allows the user to restrict displayed items by specified categories**
+  - Filters by cuisine, dish type, and diet
+  - Uses different attributes than the search bar
+  - Updates results dynamically on selection
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+The following **optional** features are implemented:
+
+- [x] Multiple filters can be applied simultaneously
+- [ ] Filters use different input types
+  - e.g., as a text input, a dropdown or radio selection, and/or a slider
+- [ ] The user can enter specific bounds for filter values
+
+The following **additional** features are implemented:
+
+* [x] Flip card interaction to reveal detailed recipe information
+* [x] Local search filtering without additional API calls
+* [x] Loading state and error handling UI
+* [x] Responsive UI design
+* [x] External link to full recipe source
+
+## Video Walkthrough
+
+Here's a walkthrough of implemented required features:
+
+<img src='https://i.imgur.com/bnJURiD.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+
+GIF created with [Kap](https://getkap.co/)
+
+## Notes
+
+Some challenges encountered while building the app:
+
+- Managing multiple filters and ensuring correct API queries
+- Handling inconsistent API data (missing fields like cuisines or healthScore)
+- Designing the flip card interaction while maintaining accessibility and UX
+- Optimizing performance using `useMemo` for derived state
+
+## License
+
+    Copyright [2026] [Gabriel Restrepo]
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
